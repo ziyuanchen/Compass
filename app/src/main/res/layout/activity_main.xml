@@ -12,4 +12,10 @@
         android:layout_centerInParent="true"
         android:src="@drawable/compass"/>
 
+    <TextView
+        android:id="@+id/OrientationText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
 </RelativeLayout>

@@ -18,16 +18,19 @@ public class MainActivity extends AppCompatActivity {
 
     private SensorManager sensorManager;
     private ImageView compassImg;
+    private TextView CompassText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         compassImg = (ImageView) findViewById(R.id.compass_img);
+        CompassText = (TextView) findViewById(R.id.OrientationText);
+        compassImg.setKeepScreenOn(true);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(listener,magneticSensor,SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(listener,accelerometerSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(listener,magneticSensor,SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(listener,accelerometerSensor,SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -56,12 +59,16 @@ public class MainActivity extends AppCompatActivity {
             float[] values = new float[3];
             sensorManager.getRotationMatrix(R, null, accelerometerValues,magneticValues);
             SensorManager.getOrientation(R, values);
-            float rotateDegree = -(float) Math.toDegrees(values[0]);
+            float rotateDegree = - (float) Math.toDegrees(values[0]);
             if(Math.abs(rotateDegree - lastRotateDegree) > 1){
                 RotateAnimation animation = new RotateAnimation(lastRotateDegree,rotateDegree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setFillAfter(true);
                 compassImg.startAnimation(animation);
+                animation.setDuration(200);
                 lastRotateDegree = rotateDegree;
+                CompassText.setText("角度："+rotateDegree);
+
+
             }
         }
 
